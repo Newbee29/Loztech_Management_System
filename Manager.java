@@ -22,7 +22,8 @@ public class Manager {
 
 
             case 1:
-                //manageItem();
+                Item manageItem= new Item();
+                manageItem.ManageItem();
                 break;
 
             case 2:
