@@ -3,7 +3,7 @@ import java.util.*;
 public class Manager {
 
     Scanner scn = new Scanner(System.in);
-
+    Item manageItem= new Item();
     public void managerMenu(){
 
         int choiceM1;
@@ -20,9 +20,8 @@ public class Manager {
 
         switch(choiceM1){
 
-
             case 1:
-                Item manageItem= new Item();
+
                 manageItem.ManageItem();
                 break;
 

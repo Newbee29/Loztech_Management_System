@@ -14,23 +14,39 @@ public class Item {
         itemCode[count] = iCode;
         itemPrice[count] = iPrice;
         quantity[count] = qty;
+        count++;
     }
 
-    public String getItemName(int count){return itemName[count];
+    public String getItemName(){return itemName[count];
     }
 
     public String getItemCode(int count){return itemCode[count];
     }
 
-    public double getItemPrice(int count){return itemPrice[count];
+    public double getItemPrice(){return itemPrice[count];
     }
 
-    public int getQuantity(int count){return quantity[count];
+    public int getQuantity(){return quantity[count];
     }
-    Item item = new Item();
+
+    public int getCount(){return count;
+    }
+
+    void displayItem(){
+        if (count == -1) {
+        System.out.println("Item not found!");
+        return;
+        }else {
+            for (int j = 0; j < count; j++) {
+                System.out.println(itemCode[j] + "\t\t" + itemName[j] + "\t\t\t\t" + "RM" + itemPrice[j] + "\t\t" + quantity[j]);
+            }
+        }
+    }
 
     void addItem(){
         System.out.println("======Add Item=====");
+        System.out.println("Code"+ "\t"+"Item Name"+"\t\t\t"+"Price"+"\t\t"+"Available Stock");
+        displayItem();
         System.out.print("Please enter item name :");
         String iName= scn.nextLine();
         System.out.print("Please enter item code :");
@@ -42,51 +58,151 @@ public class Item {
 
         scn.nextLine();
 
-        item.setItem(iName, iCode, iPrice, qty);
-        count++;
+        setItem(iName,iCode,iPrice,qty);
 
+    }
+
+    void deleteItem() {
+        System.out.println("====== Delete Item ======");
+        System.out.println("Code"+ "\t"+"Item Name"+"\t\t\t"+"Price"+"\t\t"+"Available Stock");
+        displayItem();
+        System.out.print("Please enter item name to delete: ");
+        String delName = scn.nextLine();
+
+        int del = -1;
+
+        for (int i = 0; i < count; i++) {
+            if (itemName[i].equalsIgnoreCase(delName)) {
+                del = i;
+                break;
+            }
+        }
+
+        if (del == -1) {
+            System.out.println("Item not found!");
+            return;
+        }
+
+        for (int i = del; i < count - 1; i++) {
+            itemName[i] = itemName[i+1];
+            itemCode[i] = itemCode[i+1];
+            itemPrice[i] = itemPrice[i+1];
+            quantity[i] = quantity[i+1];
+        }
+
+        itemName[count - 1] = null;
+        itemCode[count - 1] = null;
+        itemPrice[count - 1] = 0;
+        quantity[count - 1] = 0;
+
+        count--;
+
+        System.out.println("Item deleted successfully!");
+    }
+
+
+    void changeItemDetails() {
+        System.out.println("====== Change Item Details ======");
+        System.out.println("Code" + "\t" + "Item Name" + "\t\t\t" + "Price" + "\t\t" + "Available Stock");
+        displayItem();
+        System.out.print("Enter item name to edit: ");
+        String searchName = scn.nextLine();
+
+        int k = -1;
+
+        // Find item
+        for (int i = 0; i < count; i++) {
+            if (itemName[i].equalsIgnoreCase(searchName)) {
+                k = i;
+                break;
+            }
+        }
+
+        if (k == -1) {
+            System.out.println("Item not found!");
+            return;
+        }
+
+        // Show current details
+        System.out.println("Current Details:");
+        System.out.println("----------------------");
+        System.out.println("Name     : " + itemName[k]);
+        System.out.println("Code     : " + itemCode[k]);
+        System.out.println("Price    : " + itemPrice[k]);
+        System.out.println("Quantity : " + quantity[k]);
+        System.out.println("----------------------");
+
+        // Ask for new details
+        System.out.print("Enter new name (- to keep current): ");
+        String newName = scn.nextLine();
+        if (!newName.equals("-")) {
+            itemName[k] = newName;
+        }
+
+        System.out.print("Enter new code (- to keep current): ");
+        String newCode = scn.nextLine();
+        if (!newCode.equals("-")) {
+            itemCode[k] = newCode;
+        }
+
+        System.out.print("Enter new price (-1 to keep current): ");
+        double newPrice = scn.nextDouble();
+        if (newPrice != -1) {
+            itemPrice[k] = newPrice;
+        }
+
+        System.out.print("Enter new quantity (-1 to keep current): ");
+        int newQty = scn.nextInt();
+        scn.nextLine();
+        if (newQty != -1) {
+            quantity[k] = newQty;
+        }
+
+        System.out.println("Item updated successfully!");
     }
 
 
     public void ManageItem(){
         int choiceMI;
-        System.out.println("-------------------------------");
-        System.out.println("Welcome to manage item menu");
-        System.out.println("-------------------------------");
-        System.out.println("1.Add Item");
-        System.out.println("2.Delete Item");
-        System.out.println("3.Change Item Details");
-        System.out.println("4.Exit");
-        System.out.print("Please enter your choice : ");
-        choiceMI= scn.nextInt();
+        do{
+            System.out.println("-------------------------------");
+            System.out.println("Welcome to manage item menu");
+            System.out.println("-------------------------------");
+            System.out.println("1.Add Item");
+            System.out.println("2.Delete Item");
+            System.out.println("3.Change Item Details");
+            System.out.println("4.Exit");
+            System.out.print("Please enter your choice : ");
+            choiceMI= scn.nextInt();
 
-        scn.nextLine();
+            scn.nextLine();
 
-        switch (choiceMI){
+            switch (choiceMI) {
 
-            case 1:
-                addItem();
-                break;
+                case 1:
+                    addItem();
+                    break;
 
-            case 2:
-                //delete item method;
-                break;
+                case 2:
+                    deleteItem();
+                    break;
 
-            case 3:
-                //changeitemdetail method;
-                break;
+                case 3:
+                    changeItemDetails();
+                    break;
 
-            case 4:
-                System.out.println("Exiting......");
-                return;
+                case 4:
+                    System.out.println("Exiting......");
+                    return;
 
 
-            default:
-                System.out.println("You entered an invalid options");
-                return;
-        }
-
+                default:
+                    System.out.println("You entered an invalid options");
+                    return;
+            }
+        }while(true);
     }
+
 
 
 }
