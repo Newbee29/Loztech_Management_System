@@ -1,10 +1,8 @@
-/*
+
 public class Report {
     private String orderHistory="";
     private int totalOrders=0;
     private double totalSpent=0.00;
-    Item item=new Item();
-    private double sales = 0;
 
     public void addOrder(ShoppingCart cart, Payment payment){
         totalOrders++;
@@ -19,10 +17,4 @@ public class Report {
         System.out.println("-----Order History-----");
         System.out.println(orderHistory);
     }
-
-    public void displaySales(){
-
-    }
-
-
-}*/
+}

@@ -1,11 +1,24 @@
-public class Menu {
-    private Item item = new Item();
+import java.util.*;
 
-    public void displayMenu() {
-        System.out.println("==========================Menu==================================");
-        System.out.println("Code"+ "\t"+"Item Name"+"\t\t\t"+"Price"+"\t\t"+"Available Stock");
-        item.displayItem();
-        System.out.println("================================================================");
+public class Menu {
+
+    private Item sharedItem;
+
+    public Menu(Item item) {
+        this.sharedItem = item;  // always shared
     }
 
+    public void displayMenu() {
+        System.out.println("========================== Menu ==========================");
+        sharedItem.displayItem();  // display all items
+        System.out.println("=========================================================");
+    }
+
+    public int getItemCount() {
+        return sharedItem.getCount();
+    }
+
+    public Item getSharedItem() {
+        return sharedItem; // always return the shared Item object
+    }
 }

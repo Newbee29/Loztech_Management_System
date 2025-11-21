@@ -1,19 +1,22 @@
-
-import java.util.Scanner;
+import java.util.*;
 
 public class ShoppingCart {
-    Scanner sc = new Scanner(System.in);
     private static int cartCounter = 100;
     private int cartCode;
-    private Item[] items = new Item[10];
+    private Item sharedItem;              // the shared Item object
+    private int[] itemIndexes = new int[10];  // index of each item in Item arrays
     private double[] quantities = new double[10];
     private int itemCount = 0;
-    private double totalAmount = 0.00;
+    private double totalAmount = 0.0;
+
     private int orderStatus = 0;
     private final String[] statusList = {"Confirm Your Order", "Preparing", "Finished"};
 
-    public ShoppingCart() {
+    private Scanner sc = new Scanner(System.in);
+
+    public ShoppingCart(Item sharedItem) {
         this.cartCode = cartCounter++;
+        this.sharedItem = sharedItem; // keep the shared reference
     }
 
     public int getCartCode() {
@@ -37,101 +40,111 @@ public class ShoppingCart {
         }
     }
 
+    public boolean isEmpty() {
+        return itemCount == 0;
+    }
+
     public void addCartItem(Menu menu) {
         if (itemCount >= 10) {
             System.out.println("Cart Full!");
             return;
         }
-        if (menu.getItemCount() == 0) {
-            System.out.println("Today Shop Is Close!");
+
+        if (sharedItem.getCount() == 0) {
+            System.out.println("Today Shop Is Closed!");
             return;
         }
 
-        menu.displayMenu();
-        int i=-1;
+        // Display all items
+        System.out.println("===== MENU =====");
+        sharedItem.displayItem();
+        String code;
 
+        int index = -1;
         while (true) {
-            System.out.print("Enter Item Number: ");
-            if (sc.hasNextInt()) {
-                i = sc.nextInt() - 1;
-                sc.nextLine();
-                if (i >= 0 && i < menu.getItemCount()) {
+            System.out.print("Enter Item Code to Add: ");
+            code = sc.nextLine();
+
+            for (int i = 0; i < sharedItem.getCount(); i++) {
+                if (sharedItem.getItemCode(i).equalsIgnoreCase(code)) {
+                    index = i;
                     break;
-                } else {
-                    System.out.println("🚫Invalid item number!");
                 }
-            } else {
-                System.out.println("🚫Invalid Input! Please Enter A Number! ");
-                sc.nextLine();
             }
+
+            if (index != -1) break;
+            System.out.println("Invalid code! Try again.");
         }
 
-        Item selected = menu.getItem(i);
-        double qty=0;
-
-
-        while(true) {
-            System.out.print("Enter Quantity: " + selected.itemName);
+        double qty = 0;
+        while (true) {
+            System.out.print("Enter Quantity for " + sharedItem.getItemName(index) + ": ");
             if (sc.hasNextDouble()) {
                 qty = sc.nextDouble();
                 sc.nextLine();
                 if (qty <= 0) {
-                    System.out.println("🚫Quantity Must Be Positive");
-                } else if (qty > selected.stock) {
-                    System.out.println("🚫Cannot Purchase. Only In Stock"
-                            + selected.stock);
+                    System.out.println("Quantity must be positive!");
+                } else if (qty > sharedItem.getQuantity(index)) {
+                    System.out.println("Cannot purchase. Only " + sharedItem.getQuantity(index) + " in stock.");
                 } else {
                     break;
                 }
             } else {
-                System.out.println("🚫Error: Please Enter A Valid Number For Quantity!");
+                System.out.println("Invalid number for quantity!");
                 sc.nextLine();
             }
         }
 
-        items[itemCount] = selected;
+        // Store in cart
+        itemIndexes[itemCount] = index;   // store the index
         quantities[itemCount] = qty;
-        totalAmount += selected.itemPrice * qty;
+        totalAmount += sharedItem.getItemPrice(index) * qty;
         itemCount++;
 
-        System.out.println(selected.itemName + "Added to Cart!");
+        System.out.println(sharedItem.getItemName(index) + " added to cart!");
     }
 
     public void viewCart() {
         if (itemCount == 0) {
-            System.out.println("Cart Empty!");
+            System.out.println("Cart is empty!");
             return;
         }
 
-        System.out.println("=====SHOPPING CART=====");
+        System.out.println("===== SHOPPING CART =====");
         System.out.println("No. | Item Name        | Qty   | Subtotal");
-        System.out.println("----------------------------");
-        for(int i=0;i<itemCount; i++){
-            double subtotal =items[i].itemPrice * quantities[i];
-            System.out.println(String.format("%-3d | %-15s | %-5.0f | RM%-7.2f", i + 1, items[i].itemName, quantities[i], subtotal));
-        }
-        System.out.println("---------------------------");
-        System.out.println(String.format("%-26s RM%-9.2f", "Total Cart Subtotal:", totalAmount));
-    }
+        System.out.println("------------------------------------------");
 
-    public boolean isEmpty() {
-        return itemCount==0;
+        for (int i = 0; i < itemCount; i++) {
+            int idx = itemIndexes[i];
+            double subtotal = sharedItem.getItemPrice(idx) * quantities[i];
+            System.out.println(String.format("%-3d | %-15s | %-5.0f | RM%-7.2f",
+                    i + 1, sharedItem.getItemName(idx), quantities[i], subtotal));
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("%-26s RM%-9.2f", "Total Cart Subtotal:", totalAmount));
     }
 
     public void reduceStock() {
         for (int i = 0; i < itemCount; i++) {
-            items[i].stock -= (int) quantities[i];
+            int idx = itemIndexes[i];
+            int newStock = sharedItem.getQuantity(idx) - (int) quantities[i];
+            sharedItem.setQuantity(idx, newStock); // modifies shared Item
         }
     }
 
-    public void printReceipt(double amountPaid, String paymentMethod){
-        System.out.println("=====RECEIPTS=====");
+    public void printReceipt(double amountPaid, String paymentMethod) {
+        System.out.println("===== RECEIPT =====");
         System.out.println(String.format("%-15s %-5s %-10s %-10s", "Item", "Qty", "Price", "Subtotal"));
-        System.out.println("-------------------------------------------------------------------------");
-        for(int i=0;i<itemCount;i++){
-            double subtotal=items[i].itemPrice * quantities[i];
-            System.out.println(String.format("%-15s %-5.0f RM%-9.2f RM%-9.2f", items[i].itemName, quantities[i], items[i].itemPrice, subtotal));
+        System.out.println("--------------------------------------------------------");
+
+        for (int i = 0; i < itemCount; i++) {
+            int idx = itemIndexes[i];
+            double subtotal = sharedItem.getItemPrice(idx) * quantities[i];
+            System.out.println(String.format("%-15s %-5.0f RM%-9.2f RM%-9.2f",
+                    sharedItem.getItemName(idx), quantities[i], sharedItem.getItemPrice(idx), subtotal));
         }
+
         System.out.println("------------------------------------");
         System.out.println(String.format("%-27s RM%-10.2f", "Total Paid:", amountPaid));
         System.out.println("Payment Method: " + paymentMethod);

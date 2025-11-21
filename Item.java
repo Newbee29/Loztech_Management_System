@@ -1,15 +1,16 @@
+
 import java.util.*;
 
 public class Item {
-    Scanner scn= new Scanner(System.in);
+    Scanner sc = new Scanner(System.in);
 
-    private String[] itemName= new String[100];
-    private String[] itemCode= new String[100];
-    private double[] itemPrice= new double[100];
-    private int[] quantity= new int[100];
-    int count=0;
+    private String[] itemName = new String[100];
+    private String[] itemCode = new String[100];
+    private double[] itemPrice = new double[100];
+    private int[] quantity = new int[100];
+    int count = 0;
 
-    void setItem(String iName, String iCode, double iPrice, int qty){
+    void setItem(String iName, String iCode, double iPrice, int qty) {
         itemName[count] = iName;
         itemCode[count] = iCode;
         itemPrice[count] = iPrice;
@@ -17,57 +18,69 @@ public class Item {
         count++;
     }
 
-    public String getItemName(){return itemName[count];
+    public String getItemName(int index) {
+        return itemName[index];
     }
 
-    public String getItemCode(int count){return itemCode[count];
+    public String getItemCode(int index) {
+        return itemCode[index];
     }
 
-    public double getItemPrice(){return itemPrice[count];
+    public double getItemPrice(int index) {
+        return itemPrice[index];
     }
 
-    public int getQuantity(){return quantity[count];
+    public int getQuantity(int index) {
+        return quantity[index];
     }
 
-    public int getCount(){return count;
+    public int getCount() {
+        return count;
     }
 
-    void displayItem(){
+    void displayItem() {
         if (count == -1) {
-        System.out.println("Item not found!");
-        return;
-        }else {
-            for (int j = 0; j < count; j++) {
-                System.out.println(itemCode[j] + "\t\t" + itemName[j] + "\t\t\t\t" + "RM" + itemPrice[j] + "\t\t" + quantity[j]);
-            }
+            System.out.println("Item not found!");
+            return;
         }
+
+        System.out.printf("%-10s %-25s %-12s %-10s\n", "Code", "Item Name", "Price", "Quantity");
+        System.out.println("--------------------------------------------------------------------------------");
+
+        // Print each item
+        for (int j = 0; j < count; j++) {
+            System.out.printf("%-10s %-25s RM%-10.2f %-10d\n",
+                    itemCode[j], itemName[j], itemPrice[j], quantity[j]);
+        }
+
+
     }
 
-    void addItem(){
+    void addItem() {
         System.out.println("======Add Item=====");
-        System.out.println("Code"+ "\t"+"Item Name"+"\t\t\t"+"Price"+"\t\t"+"Available Stock");
+        System.out.println("Code" + "\t" + "Item Name" + "\t\t\t" + "Price" + "\t\t" + "Available Stock");
         displayItem();
         System.out.print("Please enter item name :");
-        String iName= scn.nextLine();
+        String iName = sc.nextLine();
         System.out.print("Please enter item code :");
-        String iCode= scn.nextLine();
+        String iCode = sc.nextLine();
         System.out.print("Please enter price :");
-        double iPrice= scn.nextDouble();
+        double iPrice = sc.nextDouble();
         System.out.print("Please enter item quantity :");
-        int qty= scn.nextInt();
+        int qty = sc.nextInt();
 
-        scn.nextLine();
+        sc.nextLine();
 
-        setItem(iName,iCode,iPrice,qty);
+        setItem(iName, iCode, iPrice, qty);
 
     }
 
     void deleteItem() {
         System.out.println("====== Delete Item ======");
-        System.out.println("Code"+ "\t"+"Item Name"+"\t\t\t"+"Price"+"\t\t"+"Available Stock");
+        System.out.println("Code" + "\t" + "Item Name" + "\t\t\t" + "Price" + "\t\t" + "Available Stock");
         displayItem();
         System.out.print("Please enter item name to delete: ");
-        String delName = scn.nextLine();
+        String delName = sc.nextLine();
 
         int del = -1;
 
@@ -84,10 +97,10 @@ public class Item {
         }
 
         for (int i = del; i < count - 1; i++) {
-            itemName[i] = itemName[i+1];
-            itemCode[i] = itemCode[i+1];
-            itemPrice[i] = itemPrice[i+1];
-            quantity[i] = quantity[i+1];
+            itemName[i] = itemName[i + 1];
+            itemCode[i] = itemCode[i + 1];
+            itemPrice[i] = itemPrice[i + 1];
+            quantity[i] = quantity[i + 1];
         }
 
         itemName[count - 1] = null;
@@ -106,7 +119,7 @@ public class Item {
         System.out.println("Code" + "\t" + "Item Name" + "\t\t\t" + "Price" + "\t\t" + "Available Stock");
         displayItem();
         System.out.print("Enter item name to edit: ");
-        String searchName = scn.nextLine();
+        String searchName = sc.nextLine();
 
         int k = -1;
 
@@ -134,26 +147,26 @@ public class Item {
 
         // Ask for new details
         System.out.print("Enter new name (- to keep current): ");
-        String newName = scn.nextLine();
+        String newName = sc.nextLine();
         if (!newName.equals("-")) {
             itemName[k] = newName;
         }
 
         System.out.print("Enter new code (- to keep current): ");
-        String newCode = scn.nextLine();
+        String newCode = sc.nextLine();
         if (!newCode.equals("-")) {
             itemCode[k] = newCode;
         }
 
         System.out.print("Enter new price (-1 to keep current): ");
-        double newPrice = scn.nextDouble();
+        double newPrice = sc.nextDouble();
         if (newPrice != -1) {
             itemPrice[k] = newPrice;
         }
 
         System.out.print("Enter new quantity (-1 to keep current): ");
-        int newQty = scn.nextInt();
-        scn.nextLine();
+        int newQty = sc.nextInt();
+        sc.nextLine();
         if (newQty != -1) {
             quantity[k] = newQty;
         }
@@ -162,9 +175,9 @@ public class Item {
     }
 
 
-    public void ManageItem(){
+    public void ManageItem() {
         int choiceMI;
-        do{
+        do {
             System.out.println("-------------------------------");
             System.out.println("Welcome to manage item menu");
             System.out.println("-------------------------------");
@@ -173,9 +186,9 @@ public class Item {
             System.out.println("3.Change Item Details");
             System.out.println("4.Exit");
             System.out.print("Please enter your choice : ");
-            choiceMI= scn.nextInt();
+            choiceMI = sc.nextInt();
 
-            scn.nextLine();
+            sc.nextLine();
 
             switch (choiceMI) {
 
@@ -200,9 +213,14 @@ public class Item {
                     System.out.println("You entered an invalid options");
                     return;
             }
-        }while(true);
+        } while (true);
     }
 
-
-
+    public void setQuantity(int index, int qty) {
+        if (index >= 0 && index < count) {
+            quantity[index] = qty;
+        } else {
+            System.out.println("Come Back Again Tommorrow");
+        }
+    }
 }

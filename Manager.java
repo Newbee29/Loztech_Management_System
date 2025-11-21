@@ -1,9 +1,18 @@
 import java.util.*;
 
-public class Manager {
+public class Manager extends User {
 
-    Scanner scn = new Scanner(System.in);
-    Item manageItem= new Item();
+    Scanner sc = new Scanner(System.in);
+
+
+    Item manageItem;
+    private Item sharedItem;
+
+    public Manager(Item item) {   // ← receive shared Item
+        this.manageItem = item;
+        this.sharedItem=item;
+    }
+
     public void managerMenu(){
 
         int choiceM1;
@@ -14,9 +23,9 @@ public class Manager {
         System.out.println("2.Report");
         System.out.println("3.Exit");
         System.out.print("Please enter your choice : ");
-        choiceM1 = scn.nextInt();
+        choiceM1 = sc.nextInt();
 
-        scn.nextLine();
+        sc.nextLine();
 
         switch(choiceM1){
 
