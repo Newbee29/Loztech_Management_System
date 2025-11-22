@@ -7,7 +7,7 @@ public class Manager extends User {
 
     Item manageItem;
     private Item sharedItem;
-    Report rep;
+    Report rep= new Report();
 
     public Manager(Item item) {   // ← receive shared Item
         this.manageItem = item;

@@ -21,14 +21,18 @@ public class Report {
         System.out.println(orderHistory);
     }
 
-    private void addSales(Payment payment) {
+    public void addSales(Payment payment) {
         totalSales += payment.getAmountPaid();
     }
 
 
     public void displaySales(){
         System.out.println("===== Sales Report =====");
-        System.out.println("Total Sales : RM" + totalSales);
+        if(totalSales==0){
+            System.out.println("Still no sales yet today...");
+        }else {
+            System.out.println("Total Sales : RM" + totalSales);
+        }
         System.out.println("========================");
     }
 
