@@ -7,6 +7,7 @@ public class Manager extends User {
 
     Item manageItem;
     private Item sharedItem;
+    Report rep;
 
     public Manager(Item item) {   // ← receive shared Item
         this.manageItem = item;
@@ -35,7 +36,7 @@ public class Manager extends User {
                 break;
 
             case 2:
-                //report();
+                rep.displaySales();
                 break;
 
             case 3:

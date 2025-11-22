@@ -33,8 +33,8 @@ public class User {
             }
         }
 
-            setUser(uName, pWord, rLe);
-            System.out.println("You've successfully registered!");
+        setUser(uName, pWord, rLe);
+        System.out.println("You've successfully registered!");
     }
 
     public int login() {

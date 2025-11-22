@@ -3,6 +3,9 @@ public class Report {
     private String orderHistory="";
     private int totalOrders=0;
     private double totalSpent=0.00;
+    private double totalSales;
+
+
 
     public void addOrder(ShoppingCart cart, Payment payment){
         totalOrders++;
@@ -17,4 +20,16 @@ public class Report {
         System.out.println("-----Order History-----");
         System.out.println(orderHistory);
     }
+
+    private void addSales(Payment payment) {
+        totalSales += payment.getAmountPaid();
+    }
+
+
+    public void displaySales(){
+        System.out.println("===== Sales Report =====");
+        System.out.println("Total Sales : RM" + totalSales);
+        System.out.println("========================");
+    }
+
 }
